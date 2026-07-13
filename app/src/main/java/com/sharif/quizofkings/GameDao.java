@@ -1,6 +1,5 @@
 package com.sharif.quizofkings;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -20,6 +19,6 @@ public interface GameDao {
     @Query("SELECT IFNULL(MAX(id), 0) + 1 FROM games")
     int getNextGameId();
 
-    @Query("DELETE FROM logged_in_user")
+    @Query("DELETE FROM games")
     void deleteAll();
 }
