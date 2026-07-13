@@ -1,22 +1,15 @@
 package com.sharif.quizofkings;
 
 import android.content.Context;
-import android.util.JsonReader;
 
-import androidx.annotation.NonNull;
-import androidx.room.Insert;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
-import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.google.gson.Gson;
-
-import java.io.FileReader;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@androidx.room.Database(entities = {User.class, Score.class, Game.class, LoggedInUser.class}, version = 8, exportSchema = false)
+@androidx.room.Database(entities = {User.class, Score.class, Game.class, LoggedInUser.class}, version = 9, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class Database extends RoomDatabase {
     public abstract UserDao UserDao();

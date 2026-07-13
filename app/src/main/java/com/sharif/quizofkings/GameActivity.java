@@ -43,7 +43,18 @@ public class GameActivity extends AppCompatActivity{
         setContentView(R.layout.activity_game);
         db = Database.getInstance(this);
         LoggedInUser logged = db.LoggedInUserDao().user();
+        if (logged == null) {
+            Toast.makeText(this, "No user is logged in", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
         loggedInUser = db.UserDao().getUser(logged.getEmail());
+        if (loggedInUser == null) {
+            db.LoggedInUserDao().deleteAll();
+            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
         setUpDrawer();
         startGame = findViewById(R.id.start_game);
         logout = findViewById(R.id.logout);
@@ -87,7 +98,9 @@ public class GameActivity extends AppCompatActivity{
                             return;
                         }
 
-                        Game game = new Game(db.GameDao().getNextGameId(), questions.size(), loggedInUser.getEmail(), questions);
+                        Game game = new Game(db.GameDao().getNextGameId(), loggedInUser.getNumberOfQuestions(),
+                                loggedInUser.getEmail(), loggedInUser.getDifficulty(), loggedInUser.getCategory(),
+                                questions);
                         db.GameDao().insert(game);
                         Toast.makeText(GameActivity.this, "Success!", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(GameActivity.this, QuestionsActivity.class);
@@ -100,11 +113,12 @@ public class GameActivity extends AppCompatActivity{
 
                 @Override
                 public void onFailure(Call<String> call, Throwable t) {
-                    Game game = db.GameDao().getGame(loggedInUser.getEmail());
+                    Game game = db.GameDao().getGame(loggedInUser.getEmail(), loggedInUser.getDifficulty(),
+                            loggedInUser.getCategory(), loggedInUser.getNumberOfQuestions());
                     if (game == null) {
-                        Toast.makeText(GameActivity.this, "You are offline and have no games in cache!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(GameActivity.this, "No matching cached game is available", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(GameActivity.this, "You are offline! Launching a cached game...", Toast.LENGTH_LONG).show();
+                        Toast.makeText(GameActivity.this, "Launching a cached game", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(GameActivity.this, QuestionsActivity.class);
                         intent.putExtra("game", game);
                         startActivity(intent);

@@ -20,6 +20,11 @@ public class Game implements Serializable {
     private String userEmail;
 
     @NonNull
+    private String difficulty;
+
+    private int category;
+
+    @NonNull
     public String getUserEmail() {
         return userEmail;
     }
@@ -27,10 +32,13 @@ public class Game implements Serializable {
     @NonNull
     private ArrayList<Question> questions;
 
-    public Game(int id, int numberOfQuestions, @NonNull String userEmail, @NonNull ArrayList<Question> questions) {
+    public Game(int id, int numberOfQuestions, @NonNull String userEmail, @NonNull String difficulty,
+                int category, @NonNull ArrayList<Question> questions) {
         this.id = id;
         this.numberOfQuestions = numberOfQuestions;
         this.userEmail = userEmail;
+        this.difficulty = difficulty;
+        this.category = category;
         this.questions = questions;
     }
 
@@ -50,12 +58,29 @@ public class Game implements Serializable {
         this.userEmail = userEmail;
     }
 
+    public void setDifficulty(@NonNull String difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public void setCategory(int category) {
+        this.category = category;
+    }
+
     public void setQuestions(@NonNull ArrayList<Question> questions) {
         this.questions = questions;
     }
 
     public int getNumberOfQuestions() {
         return numberOfQuestions;
+    }
+
+    @NonNull
+    public String getDifficulty() {
+        return difficulty;
+    }
+
+    public int getCategory() {
+        return category;
     }
 
     @NonNull

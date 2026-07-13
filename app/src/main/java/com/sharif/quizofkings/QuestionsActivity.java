@@ -69,7 +69,7 @@ public class QuestionsActivity extends AppCompatActivity {
     private void configureSubmit() {
         submit.setOnClickListener(view -> {
             int selected = rg.getCheckedRadioButtonId();
-            String difficulty = user.getDifficulty();
+            String difficulty = game.getDifficulty();
             if (difficulty.equals("easy")) {
                 zarib = 1;
             } else if (difficulty.equals("medium")) {

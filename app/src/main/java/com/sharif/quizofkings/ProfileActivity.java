@@ -22,7 +22,18 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         db = Database.getInstance(this);
         LoggedInUser logged = db.LoggedInUserDao().user();
+        if (logged == null) {
+            Toast.makeText(this, "No user is logged in", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
         user = db.UserDao().getUser(logged.getEmail());
+        if (user == null) {
+            db.LoggedInUserDao().deleteAll();
+            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
         findViews();
         setInitialValues();
         configureApply();
