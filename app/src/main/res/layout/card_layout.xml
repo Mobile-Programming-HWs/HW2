@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="5dp"
+    app:cardBackgroundColor="@color/quiz_card_surface"
     app:cardCornerRadius="8dp"
     app:cardElevation="8dp"
     app:cardPreventCornerOverlap="true"
@@ -17,7 +18,10 @@
             android:id="@+id/q_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="50dp"/>
+            android:layout_margin="28dp"
+            android:textColor="@color/quiz_text_primary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <RadioGroup
             android:id="@+id/rd_group"
@@ -29,28 +33,36 @@
             <RadioButton
                 android:id="@+id/rd1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:textColor="@color/quiz_text_primary" />
 
             <RadioButton
                 android:id="@+id/rd2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:textColor="@color/quiz_text_primary" />
 
             <RadioButton
                 android:id="@+id/rd3"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:textColor="@color/quiz_text_primary" />
 
             <RadioButton
                 android:id="@+id/rd4"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:textColor="@color/quiz_text_primary" />
 
             <Button
                 android:id="@+id/clear_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="clear" />
+                android:text="Clear" />
 
         </RadioGroup>
 

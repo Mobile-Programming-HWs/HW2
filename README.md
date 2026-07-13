@@ -11,9 +11,17 @@ Android quiz app for playing multiple-choice trivia games with a local account.
 - Shows quiz category, difficulty, question count, saved games, progress, and current score.
 - Stores scores and shows the top five users by best score.
 
-## Screenshot
+## Screenshots
 
-![Login screen](docs/screenshots/login.png)
+<p>
+  <img src="docs/screenshots/login.png" width="170" alt="Login screen">
+  <img src="docs/screenshots/game.png" width="170" alt="Game start screen">
+  <img src="docs/screenshots/drawer.png" width="170" alt="Navigation drawer">
+  <img src="docs/screenshots/question.png" width="170" alt="Question screen">
+  <img src="docs/screenshots/settings.png" width="170" alt="Settings screen">
+  <img src="docs/screenshots/profile.png" width="170" alt="Profile screen">
+  <img src="docs/screenshots/scoreboard.png" width="170" alt="Scoreboard screen">
+</p>
 
 ## Setup
 
@@ -55,5 +63,6 @@ adb devices
 - User settings: `SettingsActivity`
 - Score table: `ScoreboardActivity`
 - Local database: Room entities and DAOs under `com.sharif.quizofkings`
+- The navigation drawer links to profile, settings, and scoreboard.
 
 The app uses `https://opentdb.com/api.php` for live trivia questions. Cached games are stored locally per user email.

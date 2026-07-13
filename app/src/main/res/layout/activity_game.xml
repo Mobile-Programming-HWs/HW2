@@ -10,6 +10,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/screen_background"
         android:fillViewport="true">
 
         <LinearLayout
@@ -27,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/game_screen_title"
-                android:textColor="?android:attr/textColorPrimary"
+                android:textColor="@color/quiz_text_primary"
                 android:textSize="26sp"
                 android:textStyle="bold" />
 
@@ -37,6 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:lineSpacingExtra="4dp"
+                android:textColor="@color/quiz_text_secondary"
                 android:textSize="17sp"
                 tools:text="Category: Art\nDifficulty: Easy\nQuestions: 10\nSaved games: 2" />
 

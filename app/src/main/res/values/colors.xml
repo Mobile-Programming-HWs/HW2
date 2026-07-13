@@ -7,4 +7,15 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="brand_primary">#7A2E2A</color>
+    <color name="brand_primary_dark">#4E1F1C</color>
+    <color name="brand_accent">#D39C2F</color>
+    <color name="screen_background">#FFF8F2</color>
+    <color name="quiz_card_surface">#FFFFFB</color>
+    <color name="quiz_text_primary">#251B18</color>
+    <color name="quiz_text_secondary">#6F5E58</color>
+    <color name="rank_gold">#F5C45A</color>
+    <color name="rank_silver">#DAD6CD</color>
+    <color name="rank_bronze">#D18A51</color>
+    <color name="rank_plain">#FFF0E4</color>
 </resources>

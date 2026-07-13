@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="8dp"
+    app:cardBackgroundColor="@color/quiz_card_surface"
     android:padding="8dp"
     android:layout_margin="5dp"
     android:id="@+id/card_view">
@@ -21,7 +22,7 @@
             android:layout_height="wrap_content"
             android:text="@string/score"
             android:textAlignment="center"
-            android:textColor="@android:color/black"
+            android:textColor="@color/quiz_text_primary"
             android:textSize="28sp"
             android:textStyle="bold" />
 
@@ -31,6 +32,7 @@
             android:layout_height="wrap_content"
             android:text="@string/score_holder"
             android:textAlignment="center"
+            android:textColor="@color/quiz_text_secondary"
             android:textSize="23sp" />
     </LinearLayout>
 
