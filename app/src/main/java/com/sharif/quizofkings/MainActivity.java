@@ -1,27 +1,13 @@
 package com.sharif.quizofkings;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.JsonReader;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.gson.JsonParser;
-
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,13 +32,17 @@ public class MainActivity extends AppCompatActivity {
         //readSample();
         super.onCreate(savedInstanceState);
         db = Database.getInstance(this);
+        setContentView(R.layout.activity_main);
+        findViews();
         LoggedInUser logged = db.LoggedInUserDao().user();
         if (logged != null) {
             loggedInUser = db.UserDao().getUser(logged.getEmail());
-            login();
+            if (loggedInUser == null) {
+                db.LoggedInUserDao().deleteAll();
+            } else {
+                login();
+            }
         }
-        setContentView(R.layout.activity_main);
-        findViews();
         login.setOnClickListener(view -> {
             boolean isValid = true;
             if (email.getText().toString().isEmpty()){
@@ -69,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
             if (user != null) {
                 if (user.getPassword().equals(password.getText().toString())) {
                     loggedInUser = user;
+                    db.LoggedInUserDao().deleteAll();
                     db.LoggedInUserDao().insert(new LoggedInUser(email.getText().toString()));
                     Toast.makeText(MainActivity.this, "Success!", Toast.LENGTH_SHORT).show();
                     login();

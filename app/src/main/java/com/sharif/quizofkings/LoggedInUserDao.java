@@ -13,6 +13,6 @@ public interface LoggedInUserDao {
     @Query("DELETE FROM logged_in_user")
     void deleteAll();
 
-    @Query("SELECT * FROM logged_in_user")
+    @Query("SELECT * FROM logged_in_user LIMIT 1")
     LoggedInUser user();
 }
