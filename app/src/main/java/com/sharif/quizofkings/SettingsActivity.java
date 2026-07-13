@@ -54,7 +54,6 @@ public class SettingsActivity extends AppCompatActivity {
         loadCurrentSettings();
         switchMaterial.setOnCheckedChangeListener((compoundButton, isChecked) -> {
             selectedDark = isChecked;
-            applyNightMode(isChecked);
         });
         configureCategory();
         configureDifficulty();
@@ -69,6 +68,7 @@ public class SettingsActivity extends AppCompatActivity {
             user.setNumberOfQuestions(selectedNum);
             user.setDarkMode(selectedDark);
             db.UserDao().update(user);
+            applyNightMode(selectedDark);
             Toast.makeText(this, "Settings saved", Toast.LENGTH_LONG).show();
         });
     }

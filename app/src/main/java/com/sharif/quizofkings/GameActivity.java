@@ -36,6 +36,7 @@ public class GameActivity extends AppCompatActivity{
     private Button logout;
     private Database db;
     private User loggedInUser;
+    private boolean gameRequestRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,10 @@ public class GameActivity extends AppCompatActivity{
 
     private void configureGame() {
         startGame.setOnClickListener(view -> {
+            if (gameRequestRunning) {
+                return;
+            }
+            setGameRequestRunning(true);
             Call<String> call = RetrofitClient.getInstance().getMyApi().getGame(
                     loggedInUser.getNumberOfQuestions(),
                     loggedInUser.getDifficulty(),
@@ -117,6 +122,7 @@ public class GameActivity extends AppCompatActivity{
                             loggedInUser.getCategory(), loggedInUser.getNumberOfQuestions());
                     if (game == null) {
                         Toast.makeText(GameActivity.this, "No matching cached game is available", Toast.LENGTH_LONG).show();
+                        setGameRequestRunning(false);
                     } else {
                         Toast.makeText(GameActivity.this, "Launching a cached game", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(GameActivity.this, QuestionsActivity.class);
@@ -126,6 +132,11 @@ public class GameActivity extends AppCompatActivity{
                 }
             });
         });
+    }
+
+    private void setGameRequestRunning(boolean running) {
+        gameRequestRunning = running;
+        startGame.setEnabled(!running);
     }
 
     private void setUpDrawer() {
@@ -140,6 +151,10 @@ public class GameActivity extends AppCompatActivity{
                 intent = new Intent(GameActivity.this, SettingsActivity.class);
             } else if (id == R.id.scoreboard) {
                 intent = new Intent(GameActivity.this, ScoreboardActivity.class);
+            }
+            if (intent == null) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return false;
             }
             GameActivity.this.startActivity(intent);
             drawerLayout.closeDrawer(GravityCompat.START);
@@ -157,11 +172,20 @@ public class GameActivity extends AppCompatActivity{
     }
 
     @Override
-    public void onBackPressed(){
-        Intent a = new Intent(Intent.ACTION_MAIN);
-        a.addCategory(Intent.CATEGORY_HOME);
-        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(a);
+    protected void onResume() {
+        super.onResume();
+        if (startGame != null) {
+            setGameRequestRunning(false);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return;
+        }
+        super.onBackPressed();
     }
 
     @Override
