@@ -5,13 +5,15 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import java.util.List;
+
 @Dao
 public interface GameDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     long insert(Game game);
 
-    @Query("SELECT * FROM games WHERE userEmail = :userEmail AND difficulty = :difficulty AND category = :category AND numberOfQuestions = :numberOfQuestions ORDER BY RANDOM() LIMIT 1")
-    Game getGame(String userEmail, String difficulty, int category, int numberOfQuestions);
+    @Query("SELECT * FROM games WHERE userEmail = :userEmail AND difficulty = :difficulty AND category = :category AND numberOfQuestions = :numberOfQuestions ORDER BY id DESC")
+    List<Game> getGames(String userEmail, String difficulty, int category, int numberOfQuestions);
 
     @Query("SELECT * FROM games WHERE id = :id")
     Game getGameById(int id);

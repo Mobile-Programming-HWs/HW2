@@ -8,7 +8,7 @@ Android quiz app for playing multiple-choice trivia games with a local account.
 - Saves user settings in Room.
 - Fetches questions from Open Trivia DB.
 - Falls back to a cached game that matches the current quiz settings.
-- Stores scores and shows the top five results.
+- Stores scores and shows the top five users by best score.
 
 ## Setup
 

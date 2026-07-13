@@ -19,14 +19,17 @@ public class ScoreboardActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scoreboard);
         db = Database.getInstance(this);
-        List<Score> scores = db.ScoreDao().getOrderedScores();
+        List<ScoreboardRows.Row> rows = ScoreboardRows.topRows(db.ScoreDao().getOrderedScores(), email.length);
         findViews();
-        for (int i = 0; i < email.length && i < scores.size(); i++) {
-            Score userScore = scores.get(i);
-            if (userScore == null)
-                continue;
-            score[i].setText(String.valueOf((int) userScore.getScore()));
-            email[i].setText(userScore.getUserEmail());
+        for (int i = 0; i < email.length; i++) {
+            if (i < rows.size()) {
+                ScoreboardRows.Row row = rows.get(i);
+                score[i].setText(String.valueOf(row.getScore()));
+                email[i].setText(row.getUserEmail());
+            } else {
+                score[i].setText(R.string.empty_score_value);
+                email[i].setText(R.string.empty_scoreboard_row);
+            }
         }
     }
 

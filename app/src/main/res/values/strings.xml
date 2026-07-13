@@ -10,7 +10,18 @@
     <string name="open_nav">open</string>
     <string name="close_nav">Scoreboard</string>
     <string name="start_a_game">Start a Game!</string>
+    <string name="loading_game">Loading...</string>
+    <string name="retry_game">Retry</string>
+    <string name="game_status_ready">Ready to start.</string>
+    <string name="game_status_loading_online">Loading questions...</string>
+    <string name="game_status_online_failed">Online questions are unavailable. Checking saved games...</string>
+    <string name="game_status_online_empty">No online questions matched these settings. Checking saved games...</string>
+    <string name="game_status_starting_online">Starting new game...</string>
+    <string name="game_status_starting_cached">Starting saved game...</string>
+    <string name="game_status_retry">No online questions or matching saved game. Try again.</string>
     <string name="log_out">Log out</string>
     <string name="score">score</string>
     <string name="score_holder">score holder</string>
+    <string name="empty_score_value">-</string>
+    <string name="empty_scoreboard_row">No score yet</string>
 </resources>

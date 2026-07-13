@@ -12,7 +12,7 @@ public interface ScoreDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     long insert(Score score);
 
-    @Query("SELECT * FROM scores ORDER BY score DESC LIMIT 5")
+    @Query("SELECT * FROM scores ORDER BY score DESC")
     List<Score> getOrderedScores();
 
     @Query("SELECT * FROM scores ORDER BY score DESC LIMIT 1")
