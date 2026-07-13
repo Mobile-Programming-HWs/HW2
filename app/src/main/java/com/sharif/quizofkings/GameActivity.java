@@ -10,20 +10,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.nio.charset.StandardCharsets;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -68,31 +66,35 @@ public class GameActivity extends AppCompatActivity{
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
                     String json = response.body();
-                    char resp = (char) json.getBytes(StandardCharsets.UTF_8)[17];
-                    if (resp == '1') {
+                    if (!response.isSuccessful() || json == null) {
                         onFailure(call, null);
-                        TextView textView = findViewById(R.id.textView3);
-                        textView.setText(json);
-                    } else {
-                        int index = json.indexOf(':', json.indexOf(':') + 1);
-                        json = json.substring(index + 1);
-                        json = json.substring(0, json.length() - 1);
-                        TextView textView = findViewById(R.id.textView3);
-                        //textView.setText(json);
-                        Gson gson = new Gson();
-                        ArrayList<Question> questions = gson.fromJson(json, new TypeToken<List<Question>>() {
-                        }.getType());
-                        StringBuilder builder = new StringBuilder();
-                        for (Question question : questions) {
-                            builder.append(question.getQuestion());
+                        return;
+                    }
+
+                    try {
+                        JSONObject object = new JSONObject(json);
+                        if (object.optInt("response_code", 1) != 0) {
+                            onFailure(call, null);
+                            return;
                         }
-                        Game game = new Game(Game.total + 1, questions.size(), loggedInUser.getEmail(), questions);
-                        Game.total += 1;
+
+                        JSONArray results = object.getJSONArray("results");
+                        Gson gson = new Gson();
+                        ArrayList<Question> questions = gson.fromJson(results.toString(), new TypeToken<ArrayList<Question>>() {
+                        }.getType());
+                        if (questions == null || questions.isEmpty()) {
+                            onFailure(call, null);
+                            return;
+                        }
+
+                        Game game = new Game(db.GameDao().getNextGameId(), questions.size(), loggedInUser.getEmail(), questions);
                         db.GameDao().insert(game);
                         Toast.makeText(GameActivity.this, "Success!", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(GameActivity.this, QuestionsActivity.class);
                         intent.putExtra("game", game);
                         startActivity(intent);
+                    } catch (Exception e) {
+                        onFailure(call, e);
                     }
                 }
 

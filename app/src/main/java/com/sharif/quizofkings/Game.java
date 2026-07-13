@@ -9,8 +9,6 @@ import java.util.ArrayList;
 
 @Entity(tableName = "games")
 public class Game implements Serializable {
-    public static int total = 0;
-
     @PrimaryKey
     @NonNull
     private int id;

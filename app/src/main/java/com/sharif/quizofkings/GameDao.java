@@ -17,6 +17,9 @@ public interface GameDao {
     @Query("SELECT * FROM games WHERE id = :id")
     Game getGameById(int id);
 
+    @Query("SELECT IFNULL(MAX(id), 0) + 1 FROM games")
+    int getNextGameId();
+
     @Query("DELETE FROM logged_in_user")
     void deleteAll();
 }
