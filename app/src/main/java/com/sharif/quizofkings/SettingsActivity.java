@@ -3,8 +3,6 @@ package com.sharif.quizofkings;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
-import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,12 +21,17 @@ public class SettingsActivity extends AppCompatActivity {
     private Spinner num;
     private Button apply;
     private final String[] categories = {"Art", "Animals", "Vehicles", "Celebrities", "Sports"};
+    private final int[] categoryValues = {25, 27, 28, 26, 21};
     private final String[] difficulties = {"Easy", "Medium", "Hard"};
+    private final String[] difficultyValues = {"easy", "medium", "hard"};
     private final String[] numQuestions = {"10", "7", "5"};
+    private final int[] numQuestionValues = {10, 7, 5};
     private int selectedCat = 25;
     private String selectedDif = "easy";
     private int selectedNum = 10;
+    private boolean selectedDark = false;
     private Database db;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +39,22 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         db = Database.getInstance(this);
         findViews();
+        LoggedInUser logged = db.LoggedInUserDao().user();
+        if (logged == null) {
+            Toast.makeText(this, "No user is logged in", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        user = db.UserDao().getUser(logged.getEmail());
+        if (user == null) {
+            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        loadCurrentSettings();
         switchMaterial.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            if (isChecked) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            }
+            selectedDark = isChecked;
+            applyNightMode(isChecked);
         });
         configureCategory();
         configureDifficulty();
@@ -51,11 +64,10 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void configureApply() {
         apply.setOnClickListener(view -> {
-            LoggedInUser logged = db.LoggedInUserDao().user();
-            User user = db.UserDao().getUser(logged.getEmail());
             user.setCategory(selectedCat);
             user.setDifficulty(selectedDif);
             user.setNumberOfQuestions(selectedNum);
+            user.setDarkMode(selectedDark);
             db.UserDao().update(user);
             Toast.makeText(this, "Settings Applied!", Toast.LENGTH_LONG).show();
         });
@@ -67,13 +79,7 @@ public class SettingsActivity extends AppCompatActivity {
         num.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i == 0) {
-                    selectedNum = 10;
-                } else if (i == 1) {
-                    selectedNum = 7;
-                } else if (i == 2) {
-                    selectedNum = 5;
-                }
+                selectedNum = numQuestionValues[i];
             }
 
             @Override
@@ -81,6 +87,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
+        num.setSelection(indexOf(numQuestionValues, selectedNum));
     }
 
     private void configureDifficulty() {
@@ -89,13 +96,7 @@ public class SettingsActivity extends AppCompatActivity {
         difficulty.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i == 0) {
-                    selectedDif = "easy";
-                } else if (i == 1) {
-                    selectedDif = "medium";
-                } else if (i == 2) {
-                    selectedDif = "hard";
-                }
+                selectedDif = difficultyValues[i];
             }
 
             @Override
@@ -103,6 +104,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
+        difficulty.setSelection(indexOf(difficultyValues, selectedDif));
     }
 
     private void configureCategory() {
@@ -111,17 +113,7 @@ public class SettingsActivity extends AppCompatActivity {
         category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i == 0) {
-                    selectedCat = 25;
-                } else if (i == 1) {
-                    selectedCat = 27;
-                } else if (i == 2) {
-                    selectedCat = 28;
-                } else if (i == 3) {
-                    selectedCat = 26;
-                } else if (i == 4) {
-                    selectedCat = 21;
-                }
+                selectedCat = categoryValues[i];
             }
 
             @Override
@@ -129,6 +121,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
+        category.setSelection(indexOf(categoryValues, selectedCat));
     }
 
     private void findViews() {
@@ -137,5 +130,40 @@ public class SettingsActivity extends AppCompatActivity {
         difficulty = findViewById(R.id.difficulty);
         num = findViewById(R.id.number_of_questions);
         apply = findViewById(R.id.apply_settings);
+    }
+
+    private void loadCurrentSettings() {
+        selectedCat = user.getCategory();
+        selectedDif = user.getDifficulty();
+        selectedNum = user.getNumberOfQuestions();
+        selectedDark = user.getDarkMode();
+        switchMaterial.setChecked(selectedDark);
+        applyNightMode(selectedDark);
+    }
+
+    private void applyNightMode(boolean isDarkMode) {
+        if (isDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+    }
+
+    private int indexOf(int[] values, int selectedValue) {
+        for (int i = 0; i < values.length; i++) {
+            if (values[i] == selectedValue) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    private int indexOf(String[] values, String selectedValue) {
+        for (int i = 0; i < values.length; i++) {
+            if (values[i].equals(selectedValue)) {
+                return i;
+            }
+        }
+        return 0;
     }
 }
