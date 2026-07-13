@@ -3,8 +3,9 @@ package com.sharif.quizofkings;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -13,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 public class QuestionsActivity extends AppCompatActivity {
@@ -39,18 +39,30 @@ public class QuestionsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_questions);
         db = Database.getInstance(this);
         LoggedInUser logged = db.LoggedInUserDao().user();
+        if (logged == null) {
+            Toast.makeText(this, "No user is logged in", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
         user = db.UserDao().getUser(logged.getEmail());
+        if (user == null) {
+            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
         findViews();
         clear.setOnClickListener(view -> rg.clearCheck());
         Intent intent = getIntent();
-        db = Database.getInstance(this);
         game = (Game) intent.getSerializableExtra("game");
         if (game == null || game.getQuestions() == null || game.getQuestions().isEmpty()) {
             Toast.makeText(this, "No questions found for this game", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
-        loadQuestion();
+        if (!loadQuestion()) {
+            finish();
+            return;
+        }
         configureSubmit();
     }
 
@@ -58,13 +70,16 @@ public class QuestionsActivity extends AppCompatActivity {
         submit.setOnClickListener(view -> {
             int selected = rg.getCheckedRadioButtonId();
             String difficulty = user.getDifficulty();
-            if (difficulty.equals("easy"))
+            if (difficulty.equals("easy")) {
                 zarib = 1;
-            if (difficulty.equals("medium"))
+            } else if (difficulty.equals("medium")) {
                 zarib = 2;
-            if (difficulty.equals("hard"))
+            } else if (difficulty.equals("hard")) {
                 zarib = 3;
+            }
             if (selected == -1) {
+                Toast.makeText(this, "Choose an answer first", Toast.LENGTH_SHORT).show();
+                return;
             } else if (isCorrect(selected)) {
                 score += 3 * zarib;
             } else {
@@ -72,13 +87,16 @@ public class QuestionsActivity extends AppCompatActivity {
             }
             current += 1;
             if (current < game.getQuestions().size()) {
-                loadQuestion();
+                if (!loadQuestion()) {
+                    finish();
+                    return;
+                }
                 rg.clearCheck();
             } else {
                 Toast.makeText(this, "Your score is " + score, Toast.LENGTH_SHORT).show();
                 Score highest = db.ScoreDao().getTopScore();
                 if (highest == null || highest.getScore() <= score) {
-                    Toast.makeText(this, "Your broke the record!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "You broke the record!", Toast.LENGTH_SHORT).show();
                 }
                 db.ScoreDao().insert(new Score(user.getEmail(), score));
                 finish();
@@ -89,7 +107,7 @@ public class QuestionsActivity extends AppCompatActivity {
     private boolean isCorrect(int selected) {
         View radioSelected = rg.findViewById(selected);
         int idx = rg.indexOfChild(radioSelected);
-        String answer = game.getQuestions().get(current).getCorrect_answer();
+        String answer = decodeHtml(game.getQuestions().get(current).getCorrect_answer());
         RadioButton selectedButton = (RadioButton) rg.getChildAt(idx);
         if (selectedButton != null && selectedButton.getText().toString().equals(answer)) {
             Toast.makeText(this, "Correct!", Toast.LENGTH_SHORT).show();
@@ -99,16 +117,25 @@ public class QuestionsActivity extends AppCompatActivity {
         return false;
     }
 
-    private void loadQuestion() {
+    private boolean loadQuestion() {
         Question question = game.getQuestions().get(current);
-        title.setText(question.getQuestion());
+        title.setText(decodeHtml(question.getQuestion()));
         ArrayList<String> inc = question.getIncorrect_answers();
-        String[] answers = {question.getCorrect_answer(), inc.get(0), inc.get(1), inc.get(2)};
-        Collections.shuffle(Arrays.asList(answers));
-        rb1.setText(answers[0]);
-        rb2.setText(answers[1]);
-        rb3.setText(answers[2]);
-        rb4.setText(answers[3]);
+        if (inc == null || inc.size() < 3) {
+            Toast.makeText(this, "Question answers are incomplete", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        ArrayList<String> answers = new ArrayList<>();
+        answers.add(decodeHtml(question.getCorrect_answer()));
+        answers.add(decodeHtml(inc.get(0)));
+        answers.add(decodeHtml(inc.get(1)));
+        answers.add(decodeHtml(inc.get(2)));
+        Collections.shuffle(answers);
+        rb1.setText(answers.get(0));
+        rb2.setText(answers.get(1));
+        rb3.setText(answers.get(2));
+        rb4.setText(answers.get(3));
+        return true;
     }
 
     private void findViews() {
@@ -120,5 +147,15 @@ public class QuestionsActivity extends AppCompatActivity {
         rb4 = findViewById(R.id.rd4);
         clear = findViewById(R.id.clear_text);
         submit = findViewById(R.id.submit);
+    }
+
+    private String decodeHtml(String value) {
+        if (value == null) {
+            return "";
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return Html.fromHtml(value, Html.FROM_HTML_MODE_LEGACY).toString();
+        }
+        return Html.fromHtml(value).toString();
     }
 }

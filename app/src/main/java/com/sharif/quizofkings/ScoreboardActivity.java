@@ -1,14 +1,10 @@
 package com.sharif.quizofkings;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ScoreboardActivity extends AppCompatActivity{
@@ -23,7 +19,7 @@ public class ScoreboardActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scoreboard);
         db = Database.getInstance(this);
-        ArrayList<Score> scores = (ArrayList<Score>) db.ScoreDao().getOrderedScores();
+        List<Score> scores = db.ScoreDao().getOrderedScores();
         findViews();
         for (int i = 0; i < email.length && i < scores.size(); i++) {
             Score userScore = scores.get(i);
