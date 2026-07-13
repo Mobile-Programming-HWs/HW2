@@ -41,13 +41,13 @@ public class SettingsActivity extends AppCompatActivity {
         findViews();
         LoggedInUser logged = db.LoggedInUserDao().user();
         if (logged == null) {
-            Toast.makeText(this, "No user is logged in", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please sign in again", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
         user = db.UserDao().getUser(logged.getEmail());
         if (user == null) {
-            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Profile could not be loaded", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -69,7 +69,7 @@ public class SettingsActivity extends AppCompatActivity {
             user.setNumberOfQuestions(selectedNum);
             user.setDarkMode(selectedDark);
             db.UserDao().update(user);
-            Toast.makeText(this, "Settings Applied!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Settings saved", Toast.LENGTH_LONG).show();
         });
     }
 

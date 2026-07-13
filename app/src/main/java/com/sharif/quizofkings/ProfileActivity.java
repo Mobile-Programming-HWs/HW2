@@ -23,14 +23,14 @@ public class ProfileActivity extends AppCompatActivity {
         db = Database.getInstance(this);
         LoggedInUser logged = db.LoggedInUserDao().user();
         if (logged == null) {
-            Toast.makeText(this, "No user is logged in", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please sign in again", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
         user = db.UserDao().getUser(logged.getEmail());
         if (user == null) {
             db.LoggedInUserDao().deleteAll();
-            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Profile could not be loaded", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -45,7 +45,7 @@ public class ProfileActivity extends AppCompatActivity {
             user.setPhoneNumber(phoneNumber.getText().toString());
             user.setUsername(username.getText().toString());
             db.UserDao().update(user);
-            Toast.makeText(this, "Profile Updated!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Profile saved", Toast.LENGTH_LONG).show();
         });
     }
 

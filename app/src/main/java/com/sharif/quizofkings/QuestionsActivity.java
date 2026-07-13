@@ -40,13 +40,13 @@ public class QuestionsActivity extends AppCompatActivity {
         db = Database.getInstance(this);
         LoggedInUser logged = db.LoggedInUserDao().user();
         if (logged == null) {
-            Toast.makeText(this, "No user is logged in", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please sign in again", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
         user = db.UserDao().getUser(logged.getEmail());
         if (user == null) {
-            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Profile could not be loaded", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -55,7 +55,7 @@ public class QuestionsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         game = (Game) intent.getSerializableExtra("game");
         if (game == null || game.getQuestions() == null || game.getQuestions().isEmpty()) {
-            Toast.makeText(this, "No questions found for this game", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No quiz questions are available", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -78,7 +78,7 @@ public class QuestionsActivity extends AppCompatActivity {
                 zarib = 3;
             }
             if (selected == -1) {
-                Toast.makeText(this, "Choose an answer first", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Select an answer first", Toast.LENGTH_SHORT).show();
                 return;
             } else if (isCorrect(selected)) {
                 score += 3 * zarib;
@@ -93,10 +93,10 @@ public class QuestionsActivity extends AppCompatActivity {
                 }
                 rg.clearCheck();
             } else {
-                Toast.makeText(this, "Your score is " + score, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Score: " + score, Toast.LENGTH_SHORT).show();
                 Score highest = db.ScoreDao().getTopScore();
                 if (highest == null || highest.getScore() <= score) {
-                    Toast.makeText(this, "You broke the record!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "New high score", Toast.LENGTH_SHORT).show();
                 }
                 db.ScoreDao().insert(new Score(user.getEmail(), score));
                 finish();
@@ -110,10 +110,10 @@ public class QuestionsActivity extends AppCompatActivity {
         String answer = decodeHtml(game.getQuestions().get(current).getCorrect_answer());
         RadioButton selectedButton = (RadioButton) rg.getChildAt(idx);
         if (selectedButton != null && selectedButton.getText().toString().equals(answer)) {
-            Toast.makeText(this, "Correct!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Correct", Toast.LENGTH_SHORT).show();
             return true;
         }
-        Toast.makeText(this, "Wrong! The answer is " + answer, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Incorrect. Answer: " + answer, Toast.LENGTH_SHORT).show();
         return false;
     }
 
@@ -122,7 +122,7 @@ public class QuestionsActivity extends AppCompatActivity {
         title.setText(decodeHtml(question.getQuestion()));
         ArrayList<String> inc = question.getIncorrect_answers();
         if (inc == null || inc.size() < 3) {
-            Toast.makeText(this, "Question answers are incomplete", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "This question is missing answers", Toast.LENGTH_SHORT).show();
             return false;
         }
         ArrayList<String> answers = new ArrayList<>();
