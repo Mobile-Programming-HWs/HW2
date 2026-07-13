@@ -45,9 +45,11 @@ public class QuestionsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         db = Database.getInstance(this);
         game = (Game) intent.getSerializableExtra("game");
-        Log.d("llll", game.getUserEmail());
-        Log.d("llll", String.valueOf(game.getNumberOfQuestions()));
-        Log.d("llll", String.valueOf(game.getId()));
+        if (game == null || game.getQuestions() == null || game.getQuestions().isEmpty()) {
+            Toast.makeText(this, "No questions found for this game", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
         loadQuestion();
         configureSubmit();
     }
@@ -69,7 +71,7 @@ public class QuestionsActivity extends AppCompatActivity {
                 score -= zarib;
             }
             current += 1;
-            if (current != user.getNumberOfQuestions()) {
+            if (current < game.getQuestions().size()) {
                 loadQuestion();
                 rg.clearCheck();
             } else {
@@ -87,32 +89,9 @@ public class QuestionsActivity extends AppCompatActivity {
     private boolean isCorrect(int selected) {
         View radioSelected = rg.findViewById(selected);
         int idx = rg.indexOfChild(radioSelected);
-        String answer = game.getQuestions().get(idx).getCorrect_answer();
-        if (idx == 0) {
-            if (rb1.getText().equals(answer)) {
-                Toast.makeText(this, "Correct!", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-            Toast.makeText(this, "Wrong! The answer is " + answer, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (idx == 1) {
-            if (rb2.getText().equals(answer)) {
-                Toast.makeText(this, "Correct!", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-            Toast.makeText(this, "Wrong! The answer is " + answer, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (idx == 2) {
-            if (rb3.getText().equals(answer)) {
-                Toast.makeText(this, "Correct!", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-            Toast.makeText(this, "Wrong! The answer is " + answer, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (rb4.getText().equals(answer)) {
+        String answer = game.getQuestions().get(current).getCorrect_answer();
+        RadioButton selectedButton = (RadioButton) rg.getChildAt(idx);
+        if (selectedButton != null && selectedButton.getText().toString().equals(answer)) {
             Toast.makeText(this, "Correct!", Toast.LENGTH_SHORT).show();
             return true;
         }

@@ -59,10 +59,11 @@ public class GameActivity extends AppCompatActivity{
 
     private void configureGame() {
         startGame.setOnClickListener(view -> {
-            Log.d("llll", loggedInUser.getDifficulty());
-            Log.d("llll", String.valueOf(loggedInUser.getNumberOfQuestions()));
-            Log.d("llll", String.valueOf(loggedInUser.getCategory()));
-            Call<String> call = RetrofitClient.getInstance().getMyApi().getGame(7, loggedInUser.getDifficulty(), loggedInUser.getCategory(), "multiple");
+            Call<String> call = RetrofitClient.getInstance().getMyApi().getGame(
+                    loggedInUser.getNumberOfQuestions(),
+                    loggedInUser.getDifficulty(),
+                    loggedInUser.getCategory(),
+                    "multiple");
             call.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
