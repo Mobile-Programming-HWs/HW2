@@ -19,6 +19,9 @@ import java.util.Collections;
 public class QuestionsActivity extends AppCompatActivity {
 
     private TextView title;
+    private TextView questionProgress;
+    private TextView currentScore;
+    private TextView questionDifficulty;
     private RadioGroup rg;
     private RadioButton rb1;
     private RadioButton rb2;
@@ -85,6 +88,7 @@ public class QuestionsActivity extends AppCompatActivity {
             } else {
                 score -= zarib;
             }
+            updateQuizMeta();
             current += 1;
             if (current < game.getQuestions().size()) {
                 if (!loadQuestion()) {
@@ -119,6 +123,7 @@ public class QuestionsActivity extends AppCompatActivity {
 
     private boolean loadQuestion() {
         Question question = game.getQuestions().get(current);
+        updateQuizMeta();
         title.setText(decodeHtml(question.getQuestion()));
         ArrayList<String> inc = question.getIncorrect_answers();
         if (inc == null || inc.size() < 3) {
@@ -140,6 +145,9 @@ public class QuestionsActivity extends AppCompatActivity {
 
     private void findViews() {
         title = findViewById(R.id.q_title);
+        questionProgress = findViewById(R.id.question_progress);
+        currentScore = findViewById(R.id.current_score);
+        questionDifficulty = findViewById(R.id.question_difficulty);
         rg = findViewById(R.id.rd_group);
         rb1 = findViewById(R.id.rd1);
         rb2 = findViewById(R.id.rd2);
@@ -147,6 +155,20 @@ public class QuestionsActivity extends AppCompatActivity {
         rb4 = findViewById(R.id.rd4);
         clear = findViewById(R.id.clear_text);
         submit = findViewById(R.id.submit);
+    }
+
+    private void updateQuizMeta() {
+        questionProgress.setText(getString(
+                R.string.question_progress_format,
+                current + 1,
+                game.getQuestions().size()
+        ));
+        currentScore.setText(getString(R.string.score_format, score));
+        questionDifficulty.setText(getString(
+                R.string.question_context_format,
+                QuizLabels.categoryName(game.getCategory()),
+                QuizLabels.difficultyName(game.getDifficulty())
+        ));
     }
 
     private String decodeHtml(String value) {

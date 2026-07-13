@@ -15,6 +15,9 @@ public interface GameDao {
     @Query("SELECT * FROM games WHERE userEmail = :userEmail AND difficulty = :difficulty AND category = :category AND numberOfQuestions = :numberOfQuestions ORDER BY id DESC")
     List<Game> getGames(String userEmail, String difficulty, int category, int numberOfQuestions);
 
+    @Query("SELECT COUNT(*) FROM games WHERE userEmail = :userEmail AND difficulty = :difficulty AND category = :category AND numberOfQuestions = :numberOfQuestions")
+    int countGames(String userEmail, String difficulty, int category, int numberOfQuestions);
+
     @Query("SELECT * FROM games WHERE id = :id")
     Game getGameById(int id);
 

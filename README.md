@@ -8,6 +8,7 @@ Android quiz app for playing multiple-choice trivia games with a local account.
 - Saves user settings in Room.
 - Fetches questions from Open Trivia DB.
 - Falls back to a cached game that matches the current quiz settings.
+- Shows quiz category, difficulty, question count, saved games, progress, and current score.
 - Stores scores and shows the top five users by best score.
 
 ## Setup
@@ -15,7 +16,7 @@ Android quiz app for playing multiple-choice trivia games with a local account.
 Install:
 
 - Android Studio
-- JDK 11
+- JDK 17
 - Android SDK Platform 32
 
 Build from PowerShell:
@@ -45,6 +46,7 @@ adb devices
 - Login and registration: `MainActivity`
 - Game start and API request: `GameActivity`
 - Question flow and scoring: `QuestionsActivity`
+- Display labels for quiz categories and difficulty: `QuizLabels`
 - Profile fields: `ProfileActivity`
 - User settings: `SettingsActivity`
 - Score table: `ScoreboardActivity`

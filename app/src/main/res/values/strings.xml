@@ -1,15 +1,19 @@
 <resources>
     <string name="app_name">Quiz of Kings</string>
-    <string name="email">email</string>
-    <string name="password">password</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
+    <string name="login_title">Quiz of Kings</string>
+    <string name="login_subtitle">Create an account, set quiz preferences, and keep saved games for offline play.</string>
     <string name="profile">Profile</string>
     <string name="settings">Settings</string>
     <string name="scoreboard">Scoreboard</string>
     <string name="open_nav">open</string>
     <string name="close_nav">Scoreboard</string>
     <string name="start_a_game">Start a Game!</string>
+    <string name="game_screen_title">Ready for a new quiz</string>
+    <string name="game_summary_format">Category: %1$s\nDifficulty: %2$s\nQuestions: %3$d\nSaved games: %4$d</string>
     <string name="loading_game">Loading...</string>
     <string name="retry_game">Retry</string>
     <string name="game_status_ready">Ready to start.</string>
@@ -24,4 +28,8 @@
     <string name="score_holder">score holder</string>
     <string name="empty_score_value">-</string>
     <string name="empty_scoreboard_row">No score yet</string>
+    <string name="question_progress_format">Question %1$d of %2$d</string>
+    <string name="score_format">Score: %1$d</string>
+    <string name="question_context_format">Category: %1$s\nDifficulty: %2$s</string>
+    <string name="scoreboard_subtitle">Best score per player</string>
 </resources>

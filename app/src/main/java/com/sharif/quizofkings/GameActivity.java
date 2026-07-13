@@ -32,6 +32,7 @@ public class GameActivity extends AppCompatActivity{
     private Button startGame;
     private Button logout;
     private TextView gameStatus;
+    private TextView gameSummary;
     private Database db;
     private User loggedInUser;
     private boolean gameRequestRunning = false;
@@ -59,12 +60,14 @@ public class GameActivity extends AppCompatActivity{
         startGame = findViewById(R.id.start_game);
         logout = findViewById(R.id.logout);
         gameStatus = findViewById(R.id.game_status);
+        gameSummary = findViewById(R.id.game_summary);
         logout.setOnClickListener(view -> {
             Intent intent = new Intent();
             setResult(Activity.RESULT_OK, intent);
             finish();
         });
         configureGame();
+        updateGameSummary();
     }
 
     private void configureGame() {
@@ -135,6 +138,15 @@ public class GameActivity extends AppCompatActivity{
         return null;
     }
 
+    private int getCachedGameCount() {
+        return db.GameDao().countGames(
+                loggedInUser.getEmail(),
+                loggedInUser.getDifficulty(),
+                loggedInUser.getCategory(),
+                loggedInUser.getNumberOfQuestions()
+        );
+    }
+
     private void launchGame(Game game, int statusMessage, String toastMessage) {
         activeGameCall = null;
         setStatus(statusMessage);
@@ -166,6 +178,16 @@ public class GameActivity extends AppCompatActivity{
 
     private void setStatus(int statusMessage) {
         gameStatus.setText(statusMessage);
+    }
+
+    private void updateGameSummary() {
+        gameSummary.setText(getString(
+                R.string.game_summary_format,
+                QuizLabels.categoryName(loggedInUser.getCategory()),
+                QuizLabels.difficultyName(loggedInUser.getDifficulty()),
+                loggedInUser.getNumberOfQuestions(),
+                getCachedGameCount()
+        ));
     }
 
     private void setUpDrawer() {
@@ -205,6 +227,7 @@ public class GameActivity extends AppCompatActivity{
         super.onResume();
         if (startGame != null && activeGameCall == null) {
             setGameRequestRunning(false, R.string.game_status_ready);
+            updateGameSummary();
         }
     }
 
