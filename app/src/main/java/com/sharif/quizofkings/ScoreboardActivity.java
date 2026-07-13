@@ -25,11 +25,12 @@ public class ScoreboardActivity extends AppCompatActivity{
         db = Database.getInstance(this);
         ArrayList<Score> scores = (ArrayList<Score>) db.ScoreDao().getOrderedScores();
         findViews();
-        for (int i = 0; i < 5; i++) {
-            if (scores.get(i) == null)
+        for (int i = 0; i < email.length && i < scores.size(); i++) {
+            Score userScore = scores.get(i);
+            if (userScore == null)
                 continue;
-            score[i].setText(String.valueOf((int) scores.get(i).getScore()));
-            email[i].setText(scores.get(i).getUserEmail());
+            score[i].setText(String.valueOf((int) userScore.getScore()));
+            email[i].setText(userScore.getUserEmail());
         }
     }
 
