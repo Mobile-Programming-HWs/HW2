@@ -11,6 +11,10 @@ Android quiz app for playing multiple-choice trivia games with a local account.
 - Shows quiz category, difficulty, question count, saved games, progress, and current score.
 - Stores scores and shows the top five users by best score.
 
+## Screenshot
+
+![Login screen](docs/screenshots/login.png)
+
 ## Setup
 
 Install:
